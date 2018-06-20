@@ -4,10 +4,11 @@ const del = require('del');
 const sass = require('gulp-sass');
 const browser_sync = require('browser-sync').create();
 
+const theme_name = 'rs_sphinx_theme'
 const sphinx_build_path = '../build'
 const sphinx_source_path = '../source'
-const theme_dst_path = '../source/_themes/sphinx_rtd_theme';
-const theme_src_path = './sphinx_rtd_theme';
+const theme_dst_path = '../source/_themes/' + theme_name;
+const theme_src_path = './' + theme_name;
 
 gulp.task('sass', (cb) => {
     gulp.src('sass/**/*.sass')
@@ -21,12 +22,6 @@ gulp.task('sass', (cb) => {
         .pipe(gulp.dest(theme_src_path + '/static/css'));
     cb();
 });
-
-gulp.task('copy:fonts', (cb) => {
-    gulp.src('fonts/**/*')
-        .pipe(gulp.dest(theme_src_path + "/static/fonts"));
-    cb();
-})
 
 gulp.task("copy:theme", (cb) => {
     gulp.src(theme_src_path + '/**/*.html')
@@ -79,7 +74,7 @@ gulp.task('watch:build', () => {
     });
 });
 
-gulp.task('copy', gulp.series('copy:fonts', 'copy:static', 'copy:theme'))
+gulp.task('copy', gulp.series('copy:static', 'copy:theme'))
 gulp.task('sphinx', gulp.series('clean:build','build:sphinx'))
 gulp.task('build', gulp.series('sass', 'copy', 'sphinx'));
 gulp.task('watch', gulp.parallel('watch:sass', 'watch:theme', 'watch:sphinx', 'watch:build'))
